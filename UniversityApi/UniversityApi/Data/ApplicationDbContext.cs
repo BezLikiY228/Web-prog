@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using UniversityApi.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using UniversityApi.Identity;
 
 namespace UniversityApi.Data;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options)

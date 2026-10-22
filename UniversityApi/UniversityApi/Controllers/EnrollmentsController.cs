@@ -1,4 +1,4 @@
-﻿
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UniversityApi.Common;
 using UniversityApi.DTO.Enrollments;
@@ -6,6 +6,7 @@ using UniversityApi.Services.Interfaces;
 
 namespace UniversityApi.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class EnrollmentsController : ControllerBase

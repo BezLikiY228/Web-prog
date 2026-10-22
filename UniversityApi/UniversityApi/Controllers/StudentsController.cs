@@ -1,13 +1,16 @@
-﻿
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UniversityApi.Common;
 using UniversityApi.DTO.Students;
 using UniversityApi.Services.Interfaces;
+using Asp.Versioning;
 
 namespace UniversityApi.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[ApiVersion("1.0")]
+[ApiVersion("2.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class StudentsController : ControllerBase
 {
     private readonly IStudentService _service;
@@ -17,18 +20,19 @@ public class StudentsController : ControllerBase
         _service = service;
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<ReturnResult<List<StudentDto>>>> GetAll()
     {
         var students = await _service.GetAllAsync();
 
         var response = ReturnResult<List<StudentDto>>.Success(students);
-
         response.TraceId = HttpContext.TraceIdentifier;
 
         return Ok(response);
     }
 
+    [Authorize]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<ReturnResult<StudentDto>>> GetById(int id)
     {
@@ -49,6 +53,7 @@ public class StudentsController : ControllerBase
         return Ok(response);
     }
 
+    [Authorize(Policy = "AdminOnly")]
     [HttpPost]
     public async Task<ActionResult<ReturnResult<StudentDto>>> Create(
         StudentCreateDto dto)
@@ -72,6 +77,7 @@ public class StudentsController : ControllerBase
         }
     }
 
+    [Authorize(Policy = "AdminOnly")]
     [HttpPut("{id:int}")]
     public async Task<ActionResult<ReturnResult<StudentDto>>> Update(
         int id,
@@ -107,6 +113,7 @@ public class StudentsController : ControllerBase
         }
     }
 
+    [Authorize(Policy = "AdminOnly")]
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<ReturnResult<object>>> Delete(int id)
     {
